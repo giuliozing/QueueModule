@@ -13,9 +13,9 @@
 #include "queuemodule.h"
 
 extern struct miscdevice queue_device;
-period = 1000;
+int period = 1000;
 module_param(period, int, 0);//the parameter period can be set while inserting the module
-max_elems = 5;
+int max_elems = 5;
 module_param(max_elems, int, 0);//the max_elems period can be set while inserting the module: sets the maximum length of the queue
 static int dev_module_init(void)
 {
