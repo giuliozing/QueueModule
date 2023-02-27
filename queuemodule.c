@@ -44,7 +44,7 @@ ssize_t my_read(struct file *file, char __user *buf, size_t len, loff_t *ppos)//
     struct list_head *l, *tmp;
     struct node *n;
     char firstelem[31];
-    int i =0;
+    int i =0, err;
     mutex_lock(&my_mutex);
     if(list_empty(&head)){
         printk("Queue is empty\n");
@@ -57,7 +57,7 @@ ssize_t my_read(struct file *file, char __user *buf, size_t len, loff_t *ppos)//
         printk("Value: %s\n", n->value);
         if(i==0){//only deletes the first element
             i=1;
-            copy_from_user(firstelem, n->value, 30);
+            err = copy_from_user(firstelem, n->value, 30);
             /*utilizzo la funzione copy from user, perché già implementata
              * non è necessario controllare che la copia vada a buon fine, in quanto i dati sono già stati controllati all'atto dell'inserimento nella lista
              * aggiungo manualmente la marca di fine stringa*/
