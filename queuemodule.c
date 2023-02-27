@@ -93,7 +93,7 @@ static ssize_t my_write(struct file *file, const char __user * buf, size_t count
     struct node *n;
     mutex_lock(&my_mutex);
     //checks the input length
-    if (count > 30){
+    if (count > 31){
         printk("The string you wrote is too long");//control in the input length
         return -1;
     }
@@ -125,7 +125,7 @@ static ssize_t my_write(struct file *file, const char __user * buf, size_t count
     (elems)++;
     printk("A new element was added to the queue! Elements are now %d.\n", elems);
     mutex_unlock(&my_mutex);
-    return len +1;
+    return len;
 }
 
 
