@@ -1,5 +1,4 @@
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "UnreachableCode"
+
 #include <linux/poll.h>
 #include <linux/module.h>
 #include <linux/kernel.h>
@@ -181,5 +180,3 @@ static void dev_module_exit(void)
 
 module_init(dev_module_init);
 module_exit(dev_module_exit);
-
-#pragma clang diagnostic pop
