@@ -95,6 +95,7 @@ static ssize_t my_write(struct file *file, const char __user * buf, size_t count
     //checks the input length
     if (count > 31){
         printk("The string you wrote is too long");//control in the input length
+        mutex_unlock(&my_mutex);
         return 0;
     }
     else
@@ -112,6 +113,7 @@ static ssize_t my_write(struct file *file, const char __user * buf, size_t count
     //kmalloc handling
     if (n == NULL) {
         printk("Failed to allocate memory\n");
+        mutex_unlock(&my_mutex);
         return -1;
     }
     err = copy_from_user(n->value, buf, len);
