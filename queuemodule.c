@@ -66,6 +66,7 @@ ssize_t my_read(struct file *file, char __user *buf, size_t len, loff_t *ppos)//
             err = copy_to_user(buf, n->value, res);//copio il primo elemento nel buffer
             //utilizzo la funzione copy to user, perché già implementata
             if (err) {//controllo che la copia sia andata a buon fine
+                mutex_unlock(&my_mutex);
                 return -EFAULT;
                 }
             list_del(l);
@@ -94,7 +95,7 @@ static ssize_t my_write(struct file *file, const char __user * buf, size_t count
     mutex_lock(&my_mutex);
     //checks the input length
     if (count > 31){
-        printk("The string you wrote is too long");//control in the input length
+        //control in the input length
         mutex_unlock(&my_mutex);
         return -1;
     }
