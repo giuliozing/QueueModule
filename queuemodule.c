@@ -19,6 +19,7 @@ module_param(period, int, 0);//the parameter period can be set while inserting t
 static int max_elems = 5;
 module_param(max_elems, int, 0);//the max_elems period can be set while inserting the module: sets the maximum length of the queue
 static unsigned int elems;//number of elems in the queue
+
 //declaring the node of the queue
 struct node {
     char value[31];
@@ -43,25 +44,30 @@ ssize_t my_read(struct file *file, char __user *buf, size_t len, loff_t *ppos)//
 {
     struct list_head *l, *tmp;
     struct node *n;
-    char firstelem[31];
-    int i =0, err;
+    int i =0, err, res;
     mutex_lock(&my_mutex);
     if(list_empty(&head)){
         printk("Queue is empty\n");
         mutex_unlock(&my_mutex);
         return 0;
     }
-    printk("Printing items in the queue...");
+    if (len > 30) {
+        res = 30;
+    }
+    else {
+        res = len;
+    }
+        printk("Printing items in the queue...");
     list_for_each_safe(l, tmp, &head){
         n = list_entry(l, struct node, kl);
         printk("Value: %s\n", n->value);
         if(i==0){//only deletes the first element
             i=1;
-            err = copy_from_user(firstelem, n->value, 30);
-            /*utilizzo la funzione copy from user, perché già implementata
-             * non è necessario controllare che la copia vada a buon fine, in quanto i dati sono già stati controllati all'atto dell'inserimento nella lista
-             * aggiungo manualmente la marca di fine stringa*/
-            firstelem[30] = '\0';
+            err = copy_to_user(buf, n->value, res);//copio il primo elemento nel buffer
+            //utilizzo la funzione copy to user, perché già implementata
+            if (err) {//controllo che la copia sia andata a buon fine
+                return -EFAULT;
+                }
             list_del(l);
             kfree(n);
             (elems)--;
@@ -79,7 +85,7 @@ ssize_t my_read(struct file *file, char __user *buf, size_t len, loff_t *ppos)//
     if(elems == max_elems-1)
         wake_up_interruptible(&my_waitqueue);
     mutex_unlock(&my_mutex);
-    return firstelem;//ritorno il primo elemento della lista
+    return res;//ritorno il primo elemento della lista
 }
 
 static ssize_t my_write(struct file *file, const char __user * buf, size_t count, loff_t *ppos){
