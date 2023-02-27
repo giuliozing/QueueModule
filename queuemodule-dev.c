@@ -12,6 +12,7 @@
 
 #include "queuemodule.h"
 
+extern struct miscdevice queue_device;
 static int dev_module_init(void)
 {
     int res;

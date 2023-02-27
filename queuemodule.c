@@ -130,7 +130,7 @@ static struct file_operations my_fops = {
 #endif
 };
 
-static struct miscdevice queue_device = {
+struct miscdevice queue_device = {
   MISC_DYNAMIC_MINOR, "queue_device", &my_fops
 };
 
