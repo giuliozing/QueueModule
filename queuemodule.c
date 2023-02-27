@@ -1,3 +1,5 @@
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "UnreachableCode"
 #include <linux/poll.h>
 #include <linux/module.h>
 #include <linux/kernel.h>
@@ -93,8 +95,10 @@ static ssize_t my_write(struct file *file, const char __user * buf, size_t count
     struct node *n;
     mutex_lock(&my_mutex);
     //checks the input length
-    if (count > 30)
-        len = 30;
+    if (count > 30){
+        printk("The string you wrote is too long");
+        return -1;
+    }
     else
         len = count;
     //adds the task to a waitqueue if the queue has the max number of elements
@@ -123,7 +127,7 @@ static ssize_t my_write(struct file *file, const char __user * buf, size_t count
     (elems)++;
     printk("A new element was added to the queue! Elements are now %d.\n", elems);
     mutex_unlock(&my_mutex);
-    return len;
+    return len +1;
 }
 
 
@@ -177,3 +181,5 @@ static void dev_module_exit(void)
 
 module_init(dev_module_init);
 module_exit(dev_module_exit);
+
+#pragma clang diagnostic pop
