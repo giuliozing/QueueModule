@@ -96,7 +96,7 @@ static ssize_t my_write(struct file *file, const char __user * buf, size_t count
     mutex_lock(&my_mutex);
     //checks the input length
     if (count > 30){
-        printk("The string you wrote is too long");
+        printk("The string you wrote is too long");//control in the input length
         return -1;
     }
     else
