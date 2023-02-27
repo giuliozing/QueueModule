@@ -43,6 +43,7 @@ ssize_t my_read(struct file *file, char __user *buf, size_t len, loff_t *ppos)//
 {
     struct list_head *l, *tmp;
     struct node *n;
+    char firstelem[31];
     int i =0;
     mutex_lock(&my_mutex);
     if(list_empty(&head)){
@@ -56,6 +57,11 @@ ssize_t my_read(struct file *file, char __user *buf, size_t len, loff_t *ppos)//
         printk("Value: %s\n", n->value);
         if(i==0){//only deletes the first element
             i=1;
+            copy_from_user(firstelem, n->value, 30);
+            /*utilizzo la funzione copy from user, perché già implementata
+             * non è necessario controllare che la copia vada a buon fine, in quanto i dati sono già stati controllati all'atto dell'inserimento nella lista
+             * aggiungo manualmente la marca di fine stringa*/
+            firstelem[30] = '\0';
             list_del(l);
             kfree(n);
             (elems)--;
@@ -73,7 +79,7 @@ ssize_t my_read(struct file *file, char __user *buf, size_t len, loff_t *ppos)//
     if(elems == max_elems-1)
         wake_up_interruptible(&my_waitqueue);
     mutex_unlock(&my_mutex);
-    return 0;
+    return firstelem;//ritorno il primo elemento della lista
 }
 
 static ssize_t my_write(struct file *file, const char __user * buf, size_t count, loff_t *ppos){
