@@ -9,13 +9,17 @@
 #include <linux/time.h>
 #include <linux/list.h>
 #include <linux/mutex.h>
-#include "queuemodule.h"
 
 MODULE_AUTHOR("Giulio Zingrillo");
 MODULE_DESCRIPTION("Misc queue device");
 MODULE_LICENSE("GPL");
 
-
+extern int period, max_elems;
+extern unsigned int elems;
+extern struct node;
+extern struct list_head head;
+extern struct mutex my_mutex;
+extern wait_queue_head_t my_waitqueue;
 static int my_open(struct inode *inode, struct file *file)
 {
     return 0;
