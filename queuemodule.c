@@ -95,7 +95,7 @@ static ssize_t my_write(struct file *file, const char __user * buf, size_t count
     //checks the input length
     if (count > 31){
         printk("The string you wrote is too long");//control in the input length
-        return -1;
+        return 0;
     }
     else
         len = count;
