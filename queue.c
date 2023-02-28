@@ -14,7 +14,7 @@ MODULE_AUTHOR("Giulio Zingrillo");
 MODULE_DESCRIPTION("Misc queue device");
 MODULE_LICENSE("GPL");
 
-extern int my_strlen(char[]);
+extern int my_strlen(char stringa[]);
 extern int period, max_elems;
 extern unsigned int elems;
 extern struct list_head head;
