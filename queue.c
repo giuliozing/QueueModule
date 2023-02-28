@@ -44,8 +44,8 @@ ssize_t my_read(struct file *file, char __user *buf, size_t len, loff_t *ppos)//
         mutex_unlock(&my_mutex);
         return 0;
     }
-    if (len > 30) {
-        res = 30;
+    if (len > 31) {
+        res = 31;
     }
     else {
         res = len;
@@ -116,7 +116,7 @@ static ssize_t my_write(struct file *file, const char __user * buf, size_t count
         mutex_unlock(&my_mutex);
         return -EFAULT;
     }
-    n->value[len] = '\0';
+    n->value[len-1] = '\0';
     list_add_tail(&(n->kl), &head);
     (elems)++;
     printk("A new element was added to the queue! Elements are now %d.\n", elems);
