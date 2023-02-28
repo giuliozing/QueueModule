@@ -13,5 +13,11 @@ struct node {
 struct list_head head;
 struct mutex my_mutex;
 wait_queue_head_t my_waitqueue;
+int my_strlen(char stringa[]){
+    int i = 0;
+    while(stringa[i]!='\0')
+        i++;
+    return i;
+}
 
 #endif //DESKTOP_QUEUEMODULE_H
