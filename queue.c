@@ -57,6 +57,7 @@ ssize_t my_read(struct file *file, char __user *buf, size_t len, loff_t *ppos)//
         if(i==0){//only deletes the first element
             i=1;
             err = copy_to_user(buf, n->value, res);//copio il primo elemento nel buffer
+            buf[res-1] = '\0';//aggiungo al buffer una marca di fine stringa
             //utilizzo la funzione copy to user, perché già implementata
             if (err) {//controllo che la copia sia andata a buon fine
                 mutex_unlock(&my_mutex);
