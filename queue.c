@@ -14,6 +14,7 @@ MODULE_AUTHOR("Giulio Zingrillo");
 MODULE_DESCRIPTION("Misc queue device");
 MODULE_LICENSE("GPL");
 
+extern int my_strlen(char[]);
 extern int period, max_elems;
 extern unsigned int elems;
 extern struct list_head head;
@@ -56,8 +57,8 @@ ssize_t my_read(struct file *file, char __user *buf, size_t len, loff_t *ppos)//
         printk("Value: %s\n", n->value);
         if(i==0){//only deletes the first element
             i=1;
-            err = copy_to_user(buf, n->value, res);//copio il primo elemento nel buffer
-            buf[res-1] = '\0';//aggiungo al buffer una marca di fine stringa
+            err = copy_to_user(buf, n->value, my_strlen(n->value));//copio il primo elemento nel buffer
+            buf[mystrlen(n->value)] = '\0';//aggiungo al buffer una marca di fine stringa
             //utilizzo la funzione copy to user, perché già implementata
             if (err) {//controllo che la copia sia andata a buon fine
                 mutex_unlock(&my_mutex);
