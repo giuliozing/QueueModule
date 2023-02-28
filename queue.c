@@ -57,8 +57,9 @@ ssize_t my_read(struct file *file, char __user *buf, size_t len, loff_t *ppos)//
         printk("Value: %s\n", n->value);
         if(i==0){//only deletes the first element
             i=1;
-            err = copy_to_user(buf, n->value, my_strlen(n->value));//copio il primo elemento nel buffer
-            buf[my_strlen(n->value)] = '\0';//aggiungo al buffer una marca di fine stringa
+            res = my_strlen(n->value);
+            err = copy_to_user(buf, n->value, res);//copio il primo elemento nel buffer
+            buf[res] = '\0';//aggiungo al buffer una marca di fine stringa
             //utilizzo la funzione copy to user, perché già implementata
             if (err) {//controllo che la copia sia andata a buon fine
                 mutex_unlock(&my_mutex);
@@ -81,7 +82,7 @@ ssize_t my_read(struct file *file, char __user *buf, size_t len, loff_t *ppos)//
     if(elems == max_elems-1)
         wake_up_interruptible(&my_waitqueue);
     mutex_unlock(&my_mutex);
-    return res;//ritorno il primo elemento della lista
+    return res+1;//ritorno il primo elemento della lista
 }
 
 static ssize_t my_write(struct file *file, const char __user * buf, size_t count, loff_t *ppos){
