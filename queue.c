@@ -45,12 +45,6 @@ ssize_t my_read(struct file *file, char __user *buf, size_t len, loff_t *ppos)//
         mutex_unlock(&my_mutex);
         return 0;
     }
-    if (len > 31) {
-        res = 31;
-    }
-    else {
-        res = len;
-    }
     printk("Printing items in the queue...");
     list_for_each_safe(l, tmp, &head){
         n = list_entry(l, struct node, kl);
@@ -82,7 +76,7 @@ ssize_t my_read(struct file *file, char __user *buf, size_t len, loff_t *ppos)//
     if(elems == max_elems-1)
         wake_up_interruptible(&my_waitqueue);
     mutex_unlock(&my_mutex);
-    return res+1;//ritorno il primo elemento della lista
+    return res+1;//ritorno il primo elemento della lista: aggiungo 1 a res per la marca di fine stringa
 }
 
 static ssize_t my_write(struct file *file, const char __user * buf, size_t count, loff_t *ppos){
