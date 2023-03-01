@@ -107,13 +107,13 @@ static ssize_t my_write(struct file *file, const char __user * buf, size_t count
         mutex_unlock(&my_mutex);
         return -1;
     }
+    my_memset(n->value, '\0', 31);//inizializzo il buffer
     err = copy_from_user(n->value, buf, 30);
     //copy handling
     if (err) {
         mutex_unlock(&my_mutex);
         return -EFAULT;
     }
-    n->value[len-1] = '\0';
     list_add_tail(&(n->kl), &head);
     (elems)++;
     printk("A new element was added to the queue! Elements are now %d.\n", elems);
