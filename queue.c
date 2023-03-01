@@ -107,7 +107,7 @@ static ssize_t my_write(struct file *file, const char __user * buf, size_t count
         mutex_unlock(&my_mutex);
         return -1;
     }
-    my_memset(n->value, '\0', 31);//inizializzo il buffer
+    memset(n->value, '\0', 31);//inizializzo il buffer
     err = copy_from_user(n->value, buf, 30);
     //copy handling
     if (err) {
