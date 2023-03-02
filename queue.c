@@ -34,7 +34,7 @@ static int my_close(struct inode *inode, struct file *file)
     return 0;
 }
 
-ssize_t my_read(struct file *file, char __user *buf, size_t len, loff_t *ppos)//servono i mutex nella read? Nella write e immediato
+ssize_t my_read(struct file *file, char __user *buf, size_t len, loff_t *ppos)
 {
     struct list_head *l, *tmp;
     struct node *n;
@@ -52,10 +52,10 @@ ssize_t my_read(struct file *file, char __user *buf, size_t len, loff_t *ppos)//
         if(i==0){//only deletes the first element
             i=1;
             res = my_strlen(n->value);
-            err = copy_to_user(buf, n->value, res);//copio il primo elemento nel buffer
-            buf[res] = '\0';//aggiungo al buffer una marca di fine stringa
-            //utilizzo la funzione copy to user, perché già implementata
-            if (err) {//controllo che la copia sia andata a buon fine
+            err = copy_to_user(buf, n->value, res);//copy of the first element in buffer
+            buf[res] = '\0';//add the end of string
+            //using copy to user function, as it is already implemented
+            if (err) {//check the success of the copy
                 mutex_unlock(&my_mutex);
                 return -EFAULT;
             }
@@ -76,7 +76,7 @@ ssize_t my_read(struct file *file, char __user *buf, size_t len, loff_t *ppos)//
     if(elems == max_elems-1)
         wake_up_interruptible(&my_waitqueue);
     mutex_unlock(&my_mutex);
-    return res+1;//ritorno il primo elemento della lista: aggiungo 1 a res per la marca di fine stringa
+    return res+1;//returning the first element of the queue: +1 is present because of the '\0' char
 }
 
 static ssize_t my_write(struct file *file, const char __user * buf, size_t count, loff_t *ppos){
@@ -107,7 +107,7 @@ static ssize_t my_write(struct file *file, const char __user * buf, size_t count
         mutex_unlock(&my_mutex);
         return -1;
     }
-    memset(n->value, '\0', 31);//inizializzo il buffer
+    memset(n->value, '\0', 31);//initializing buffer
     err = copy_from_user(n->value, buf, 30);
     //copy handling
     if (err) {
