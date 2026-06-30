@@ -43,7 +43,7 @@ static void dev_module_exit(void)
         kfree(n);
     }
     misc_deregister(&queue_device);
-    printk("Misc Device was correctly deregistered. Lenght of the queue: %d\n", info);
+    printk("Misc Device was correctly deregistered. Length of the queue: %d\n", info);
 }
 
 module_init(dev_module_init);
